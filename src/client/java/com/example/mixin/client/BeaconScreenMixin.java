@@ -1,4 +1,4 @@
-package com.example.client.mixin;
+package com.example.mixin.client;
 
 import com.example.client.gui.BlueprintPanelWidget;
 import com.example.client.gui.ScrollableEffectWidget;

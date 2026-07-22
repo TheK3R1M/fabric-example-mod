@@ -9,7 +9,7 @@
 		"BeaconPaymentSlotMixin"
 	],
 	"client": [
-		"com.example.client.mixin.BeaconScreenMixin"
+		"client.BeaconScreenMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
