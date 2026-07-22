@@ -85,7 +85,7 @@ public class BeaconNetworkState {
         if (role == Role.SLAVE) {
             if (masterPos != null) {
                 BlockEntity targetEntity = level.getBlockEntity(masterPos);
-                if (targetEntity instanceof BeaconBlockEntity masterBeacon) {
+                if (targetEntity instanceof BeaconBlockEntity) {
                     // Check if Master is valid
                     BeaconNetworkState masterState = getOrCreate(masterPos);
                     if (masterState.getRole() == Role.MASTER && masterState.getCachedTier() > 0) {

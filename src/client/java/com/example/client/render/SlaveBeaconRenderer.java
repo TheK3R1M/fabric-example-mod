@@ -58,7 +58,7 @@ public class SlaveBeaconRenderer implements BlockEntityRenderer<BeaconBlockEntit
         double dz = state.masterPos.getZ() - state.slavePos.getZ();
 
         // Beam matrix transformation for slave-to-master direction
-        poseStack.translate(0.5, 0.5, 0.5);
+        poseStack.translate(0.5 + (dx * 0.001), 0.5 + (dy * 0.001), 0.5 + (dz * 0.001));
 
         // Rendering logic placeholder for particle stream / directional beam line
         poseStack.popPose();

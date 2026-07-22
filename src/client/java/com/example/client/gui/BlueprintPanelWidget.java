@@ -67,15 +67,6 @@ public class BlueprintPanelWidget extends AbstractWidget {
         }
     }
 
-    private int calculateTotalBlocks(int tier) {
-        int total = 0;
-        for (int layer = 1; layer <= tier; layer++) {
-            int width = (2 * layer) + 1;
-            total += (width * width);
-        }
-        return total;
-    }
-
     @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
         defaultButtonNarrationText(narrationElementOutput);
