@@ -49,12 +49,12 @@ public abstract class BeaconScreenMixin extends AbstractContainerScreen<BeaconMe
         int top = (this.height - this.imageHeight) / 2;
 
         // A. Blueprint Helper Panel on the left side (outside main GUI)
-        this.blueprintPanel = new BlueprintPanelWidget(left - 130, top, 125, 168);
+        this.blueprintPanel = new BlueprintPanelWidget(left - 160, top, 125, 168);
         this.blueprintPanel.updateSelection(this.selectedLevel, this.selectedEffect);
         this.addRenderableWidget(this.blueprintPanel);
 
         // B. Interactive Scrollable Grid of Effect Buttons on the right side
-        this.scrollableEffects = new ScrollableEffectWidget(left + 175, top, 135, 168, (effectId, level) -> {
+        this.scrollableEffects = new ScrollableEffectWidget(left + 275, top, 135, 168, (effectId, level) -> {
             this.selectedEffect = effectId;
             this.selectedLevel = level;
 
