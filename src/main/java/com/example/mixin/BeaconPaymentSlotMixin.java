@@ -24,9 +24,4 @@ public abstract class BeaconPaymentSlotMixin extends Slot {
     private void customGetMaxStackSize(CallbackInfoReturnable<Integer> cir) {
         cir.setReturnValue(64);
     }
-
-    @Inject(method = "getMaxStackSize(Lnet/minecraft/world/item/ItemStack;)I", at = @At("HEAD"), cancellable = true)
-    private void customGetMaxStackSizeForStack(ItemStack stack, CallbackInfoReturnable<Integer> cir) {
-        cir.setReturnValue(64);
-    }
 }
