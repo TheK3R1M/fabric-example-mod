@@ -107,9 +107,9 @@ public abstract class BeaconBlockEntityMixin extends BlockEntity {
         netState.load(input);
     }
 
-    @Override
-    public void setRemoved() {
+    @Inject(method = "setRemoved", at = @At("HEAD"))
+    private void onSetRemoved(CallbackInfo ci) {
         BeaconNetworkState.remove(this.worldPosition);
-        super.setRemoved();
     }
 }
+
