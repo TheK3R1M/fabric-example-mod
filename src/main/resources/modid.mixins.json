@@ -4,7 +4,12 @@
 	"compatibilityLevel": "JAVA_25",
 	"mixins": [
 		"ExampleMixin",
-		"BeaconBlockEntityMixin"
+		"BeaconBlockEntityMixin",
+		"BeaconMenuMixin",
+		"BeaconPaymentSlotMixin"
+	],
+	"client": [
+		"com.example.client.mixin.BeaconScreenMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
