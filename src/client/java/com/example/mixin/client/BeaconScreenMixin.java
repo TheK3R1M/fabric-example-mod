@@ -4,6 +4,7 @@ import com.example.client.gui.BlueprintPanelWidget;
 import com.example.client.gui.ScrollableEffectWidget;
 import com.example.network.BeaconSyncPayload;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.BeaconScreen;
@@ -27,30 +28,44 @@ public abstract class BeaconScreenMixin extends AbstractContainerScreen<BeaconMe
         super(menu, playerInventory, title);
     }
 
+    // 1. Wipe Vanilla Beacon Buttons: Block vanilla addBeaconButton calls
+    @Inject(method = "addBeaconButton", at = @At("HEAD"), cancellable = true)
+    private void onAddBeaconButton(AbstractWidget button, CallbackInfo ci) {
+        ci.cancel();
+    }
+
+    // 2. Wipe Vanilla Beacon Buttons: Block vanilla button state updates
+    @Inject(method = "updateButtons", at = @At("HEAD"), cancellable = true)
+    private void onUpdateButtons(CallbackInfo ci) {
+        ci.cancel();
+    }
+
     @Inject(method = "init", at = @At("TAIL"))
     private void onBeaconScreenInit(CallbackInfo ci) {
-        // Wipe Vanilla Beacon Effect Buttons to replace with custom UI
+        // Clear any residual widgets
         this.clearWidgets();
 
         int left = (this.width - this.imageWidth) / 2;
         int top = (this.height - this.imageHeight) / 2;
 
-        // 1. Blueprint Helper Panel on the left side
-        this.blueprintPanel = new BlueprintPanelWidget(left - 125, top, 120, 168);
+        // A. Blueprint Helper Panel on the left side (outside main GUI)
+        this.blueprintPanel = new BlueprintPanelWidget(left - 130, top, 125, 168);
+        this.blueprintPanel.updateSelection(this.selectedLevel, this.selectedEffect);
         this.addRenderableWidget(this.blueprintPanel);
 
-        // 2. Interactive Scrollable Grid of Effect Buttons on the right
-        this.scrollableEffects = new ScrollableEffectWidget(left + 175, top, 120, 168, (effectId, level) -> {
+        // B. Interactive Scrollable Grid of Effect Buttons on the right side
+        this.scrollableEffects = new ScrollableEffectWidget(left + 175, top, 135, 168, (effectId, level) -> {
             this.selectedEffect = effectId;
             this.selectedLevel = level;
 
+            // Instant cost & tier recalculation on left panel
             if (this.blueprintPanel != null) {
                 this.blueprintPanel.updateSelection(level, effectId);
             }
         });
         this.addRenderableWidget(this.scrollableEffects);
 
-        // 3. Custom Confirm Checkmark Button
+        // C. Custom Confirm Checkmark Button in bottom center of GUI
         Button confirmButton = Button.builder(Component.literal("✔ Confirm"), b -> {
             // Send selection C2S payload to server
             ClientPlayNetworking.send(new BeaconSyncPayload.BeaconSelectionPayload(
@@ -60,7 +75,7 @@ public abstract class BeaconScreenMixin extends AbstractContainerScreen<BeaconMe
                 this.selectedLevel
             ));
             this.onClose();
-        }).bounds(left + 50, top + 140, 70, 20).build();
+        }).bounds(left + 50, top + 138, 72, 20).build();
 
         this.addRenderableWidget(confirmButton);
     }
