@@ -1,5 +1,6 @@
 package com.example.mixin.client;
 
+import com.example.client.config.UILayoutConfig;
 import com.example.client.gui.BlueprintPanelWidget;
 import com.example.client.gui.ScrollableEffectWidget;
 import com.example.network.BeaconSyncPayload;
@@ -45,27 +46,41 @@ public abstract class BeaconScreenMixin extends AbstractContainerScreen<BeaconMe
         // Clear any residual widgets
         this.clearWidgets();
 
+        // Load or auto-generate dynamic UI layout coordinates from config/ui_layout.json
+        UILayoutConfig.LayoutData layout = UILayoutConfig.loadOrGenerate();
+
         int left = (this.width - this.imageWidth) / 2;
         int top = (this.height - this.imageHeight) / 2;
 
-        // A. Blueprint Helper Panel on the left side (outside main GUI)
-        this.blueprintPanel = new BlueprintPanelWidget(left - 160, top, 125, 168);
+        // A. Blueprint Helper Panel
+        this.blueprintPanel = new BlueprintPanelWidget(
+            left + layout.blueprintPanel.x,
+            top + layout.blueprintPanel.y,
+            layout.blueprintPanel.width,
+            layout.blueprintPanel.height
+        );
         this.blueprintPanel.updateSelection(this.selectedLevel, this.selectedEffect);
         this.addRenderableWidget(this.blueprintPanel);
 
-        // B. Interactive Scrollable Grid of Effect Buttons on the right side
-        this.scrollableEffects = new ScrollableEffectWidget(left + 275, top, 135, 168, (effectId, level) -> {
-            this.selectedEffect = effectId;
-            this.selectedLevel = level;
+        // B. Interactive Scrollable Grid of Effect Buttons
+        this.scrollableEffects = new ScrollableEffectWidget(
+            left + layout.scrollableGrid.x,
+            top + layout.scrollableGrid.y,
+            layout.scrollableGrid.width,
+            layout.scrollableGrid.height,
+            (effectId, level) -> {
+                this.selectedEffect = effectId;
+                this.selectedLevel = level;
 
-            // Instant cost & tier recalculation on left panel
-            if (this.blueprintPanel != null) {
-                this.blueprintPanel.updateSelection(level, effectId);
+                // Instant cost & tier recalculation on left panel
+                if (this.blueprintPanel != null) {
+                    this.blueprintPanel.updateSelection(level, effectId);
+                }
             }
-        });
+        );
         this.addRenderableWidget(this.scrollableEffects);
 
-        // C. Custom Confirm Checkmark Button in bottom center of GUI
+        // C. Custom Confirm Checkmark Button
         Button confirmButton = Button.builder(Component.literal("✔ Confirm"), b -> {
             // Send selection C2S payload to server
             ClientPlayNetworking.send(new BeaconSyncPayload.BeaconSelectionPayload(
@@ -75,7 +90,12 @@ public abstract class BeaconScreenMixin extends AbstractContainerScreen<BeaconMe
                 this.selectedLevel
             ));
             this.onClose();
-        }).bounds(left + 50, top + 138, 72, 20).build();
+        }).bounds(
+            left + layout.confirmButton.x,
+            top + layout.confirmButton.y,
+            layout.confirmButton.width,
+            layout.confirmButton.height
+        ).build();
 
         this.addRenderableWidget(confirmButton);
     }

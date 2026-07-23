@@ -1,5 +1,9 @@
 package com.example.client.gui;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.BiConsumer;
+
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
@@ -8,10 +12,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.BiConsumer;
 
 public class ScrollableEffectWidget extends AbstractWidget {
 
@@ -67,7 +67,7 @@ public class ScrollableEffectWidget extends AbstractWidget {
     private void createGridButtons() {
         gridButtons.clear();
         int btnWidth = (this.width - 14) / 2; // 2-column grid layout
-        int btnHeight = 22;
+        int btnHeight = 119;
 
         for (int i = 0; i < entries.size(); i++) {
             final int index = i;
